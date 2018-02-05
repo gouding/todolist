@@ -3,3 +3,41 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  input.user(type="text",placeholder="请输入小伙伴")
+  button#add(type="button") 添加
+  .cls(style="cursor:pointer") 获取小伙伴儿
+  script(type="text/javascript").
+    $('.cls').on('click',function(){
+      $.ajax({
+        data:{},
+        dataType:'json',
+        url:'http://localhost:3000/login',
+        success:function(res){
+          console.log(res);
+          var el = $('.cls');
+          if(res.status==='0'){
+            res.result.forEach(function(item){
+              el.append('<div data-id="'+item.uid+'">'+item.name+'</div>');
+            });
+          }
+        }
+      })
+    });
+    $('#add').on('click',function(){
+      var user = $('.user').val();
+      console.log(user);
+      $.post({
+        data:{
+          user:user
+        },
+        dataType:'json',
+        url:'http://localhost:3000/addUser',
+        success:function(res){
+          if(res.status==='0'){
+            var el = $('.cls');
+            el.append('<div>'+user+'</div>');
+          }
+        }
+      })
+    });
+    
