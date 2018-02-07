@@ -1,0 +1,52 @@
+extends ./../layout
+
+block content
+  .container.insert#app
+    .row
+      .col-md-12.text-center
+        input.querytxt.col-md-10(type="text",placeholder="请输入小伙伴")
+        button.col-md-2#query(type="button",@click="query") 查询
+      table.table.border.table-striped.table-bordered.table-hover.tabl-items
+        thead
+          tr
+            th 名称
+            th 作者
+            th 时间
+            th 编辑
+        tbody
+          tr(v-for="item in list")
+            td(v-text="item.name") 
+            td(v-text="item.content")
+            td
+            td 
+              button.btn.btn-success.btn-primary 编辑
+              button.btn.btn-warning 删除
+        script(type="text/javascript").
+          $(function(){
+            new Vue({
+            el:'#app',
+            data:{
+              url:'http://localhost:3000/',
+              list:[]
+            },
+            methods:{
+              //查询数据
+              query : function(){
+                var that =this;
+                var txt = $('.querytxt').val();
+                var data={word:txt};
+                $.ajax({
+                  data:data,
+                  dataType:'json',
+                  url:this.url+'query',
+                  success:function(ret){
+                    if(ret.status){
+                      that.list = ret.result;
+                    }
+                  }
+                });
+              }
+            }
+           })
+          });
+    
