@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
+    <!-- <h1>{{ msg }}</h1>
+    <h2>Essential Links</h2> -->
+    <!-- <ul>
       <li>
         <a href="https://vuejs.org" target="_blank">
           Core Docs
@@ -52,17 +52,37 @@
           awesome-vue
         </a>
       </li>
-    </ul>
+      <li>
+      </li>
+    </ul> -->
+    <a href="javascript:;" @click="query">查询</a>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "HelloWorld",
   data() {
     return {
       msg: "Welcome to Your Vue.js App"
     };
+  },
+  methods: {
+    query() {
+      console.log(+new Date())
+      axios.get(
+        "/query",
+        {
+          params: {
+            word: "sd"
+          }
+        },
+        ret => {
+          console.log(ret);
+        }
+      );
+    }
   }
 };
 </script>
