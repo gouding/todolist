@@ -72,7 +72,7 @@ export default {
     query() {
       console.log(+new Date())
       axios.get(
-        "/query",
+        "/api/query",
         {
           params: {
             word: "sd"
