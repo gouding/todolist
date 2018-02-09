@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var _ = require('underscore');
 var UserModel = require('./../models/Users');
 
 //connect mongodb
@@ -9,7 +10,7 @@ mongoose.connect('mongodb://localhost:27017/test');
 
 //查询 
 router.get('/query', (req, res, next) => {
-  var word = req.query.word||'';
+  var word = req.query.word || '';
   var _filter = {
     $or: [  //多字段同时模糊查询
       { name: { $regex: word, $options: '$i' } }, //$options:'$i' 不区分大小写
@@ -104,22 +105,35 @@ router.post('/edit', (req, res, next) => {
 
 router.post('/save', (req, res, next) => {
   var data = req.body.data;
-  data.addTime = Date.now();
-  var model = new UserModel(data, false);
-  console.log(model);
-  model.save().then((doc) => {
-    if (doc) {
-      res.send({
-        status: 1,
-        result: doc,
-        msg: ''
+  var _model = {
+    uid: data.uid,
+    name: data.name,
+    content: data.content,
+    addTime: Date.now()
+  };
+  if (data._id) {
+    //update
+    var id = mongoose.Types.ObjectId(data._id);
+    UserModel.find({ _id: id }).then(ret => {
+      console.log(ret);
+      var obj = _.extend(ret[0], _model);
+      obj.save().then(rets => {
+        console.log('rets', rets);
       });
-    } else {
-      res.send({
-        status: -1,
-        msg: ''
-      })
-    }
-  })
+    });
+    // UserModel.update({ _id: id }, _model, { multi: true }, (err, data) => {
+    //   console.log(err, data, typeof data._id);
+    // });
+  } else {
+    //create
+    var model = new UserModel(_model, false);
+    model.save().then(ret => {
+      console.log(ret);
+    });
+  }
+  res.send({
+    status: 1,
+    msg: ''
+  });
 });
 module.exports = router;

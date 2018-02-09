@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/">返回</router-link>uid
+    <router-link to="/">返回</router-link>
     <div>
       <label for="uid">小伙伴学号 <input id="uid" type="text" v-model="users.uid"></label>
     </div>
@@ -37,7 +37,7 @@ export default {
           console.log(ret);
           if (ret && ret.data.status) {
             console.log(1);
-            that.users = ret.data.result[0];
+            that.users = ret.data.result[0] || {};
           }
         });
     },

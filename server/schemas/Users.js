@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 var UserSchema = new mongoose.Schema({
+    uid: String,
     name: String,
-    addTime: Date.now(),
-    updateTime:Date.now(),
+    addTime: { type: Date, default: Date.now() },
     content: String
 });
 
